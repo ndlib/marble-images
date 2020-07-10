@@ -1,0 +1,14 @@
+.env
+*.js
+!jest.config.js
+*.d.ts
+node_modules
+deploy
+
+# CDK asset staging directory
+.cdk.staging
+cdk.out
+
+# Parcel build directories
+.cache
+.build
