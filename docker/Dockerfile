@@ -44,13 +44,13 @@ RUN apk add \
 	python3-dev \
 	py3-pip
 
-# and now pyvips can go on
+# install python dependencies
 RUN pip3 install --upgrade pip
 RUN pip3 install wheel --no-cache-dir
-RUN pip3 install pyvips boto3 oauth2client==4.1.3 google==2.0.2 \
-	google-api-python-client==1.7.11 google-auth-httplib2==0.0.3 \
-	google-auth-oauthlib==0.4.0
+COPY requirements.txt /usr/local/bin/
+RUN pip3 install -r /usr/local/bin/requirements.txt
 
 COPY process_images.py /usr/local/bin/
+COPY google_utilities.py /usr/local/bin/
 RUN chmod u+x /usr/local/bin/process_images.py
 ENTRYPOINT ["process_images.py"]
