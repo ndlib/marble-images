@@ -18,7 +18,7 @@ def _list_changes() -> dict:
                 yield json.load(json_file)
             json_file.close()  # force close before deletion
             os.remove(local_file)
-            # aws_utility.delete_file(config.PROCESS_BUCKET, obj["Key"])
+            aws_utility.delete_file(config.PROCESS_BUCKET, obj["Key"])
         try:
             kwargs['ContinuationToken'] = resp['NextContinuationToken']
         except KeyError:
