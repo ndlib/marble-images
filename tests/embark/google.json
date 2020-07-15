@@ -1,0 +1,30 @@
+{
+  "https://drive.google.com/a/nd.edu/file/d/12iMGBpXM2ZpsxwHg0ahay9na8LGKzQMx/view": {
+    "id": "2012_097-v0002.jpg",
+    "level": "file",
+    "sequence": 1,
+    "title": "2012_097-v0002.jpg",
+    "description": "2012_097-v0002.jpg",
+    "thumbnail": true,
+    "md5Checksum": "5379c5859b4ce0bc1143bb8a1c31d278",
+    "filePath": "https://drive.google.com/a/nd.edu/file/d/12iMGBpXM2ZpsxwHg0ahay9na8LGKzQMx/view",
+    "fileId": "12iMGBpXM2ZpsxwHg0ahay9na8LGKzQMx",
+    "modifiedDate": "2019-07-03T12:24:53.446Z",
+    "mimeType": "image/jpeg",
+    "collectionId": "2012.097",
+    "parentId": "2012.097",
+    "sourceSystem": "EmbARK",
+    "repository": "museum",
+    "copyrightStatus": "Copyright",
+    "apiVersion": 1,
+    "fileCreatedDate": "2020-07-01",
+    "iiifImageUri": "https://image-iiif.library.nd.edu/iiif/2/2012.097%2F2012_097-v0002",
+    "iiifImageFilePath": "s3://marble-data-broker-publicbucket-1kvqtwnvkhra2/2012.097/2012_097-v0002",
+    "iiifUri": "https://presentation-iiif.library.nd.edu/2012.097/2012_097-v0002/canvas",
+    "iiifFilePath": "s3://marble-manifest-prod-manifestbucket-lpnnaj4jaxl5/2012.097/2012_097-v0002/canvas/index.json",
+    "metsUri": "",
+    "metsFilePath": "",
+    "schemaUri": "",
+    "schemaPath": ""
+  }
+}
