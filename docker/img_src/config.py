@@ -2,9 +2,10 @@ import boto3
 import os
 
 # AWS SETTINGS
+AWS_REGION = 'us-east-1'
 S3_CLIENT = boto3.client('s3')
 S3_RESOURCE = boto3.resource('s3')
-SSM_CLIENT = boto3.client('ssm')
+SSM_CLIENT = boto3.client('ssm', region_name=AWS_REGION)
 
 # IMAGE CONSTANTS
 DEFAULT_MAX_HEIGHT = 4000.0
