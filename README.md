@@ -61,8 +61,8 @@ Tests should be placed in test/unit
 To execute all test: `python run_all_tests.py`
 ### Dependencies
 #### Development Dependencies
-1. Review the lambda/dev-requirements.txt to install/update lambda development packages
-2. Review the lib/dev-requirements.txt to install/update ECS development packages
+1. Review the src/dev-requirements.txt to install/update lambda development packages
+2. Review the docker/requirements.txt to install/update ECS development packages
 #### Production Dependencies
 1. Review the lambda/requirements.txt to install/update lambda development packages
 2. Review the ECS Dockerfile for python production packages

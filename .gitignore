@@ -4,6 +4,8 @@
 *.d.ts
 node_modules
 deploy
+__pycache__/
+.DS_Store
 
 # CDK asset staging directory
 .cdk.staging

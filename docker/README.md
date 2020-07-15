@@ -13,7 +13,7 @@ Your computer may already have Docker installed, so check first!
 [Installation Guide](https://docs.docker.com/get-docker/)
 
 ## Local Development
-Converting images to pyramid tiff is done in [process_images.py](process_images.py). This python3 script can be run separately outside of docker. However, if you want to run the script inside the container here's how...
+Converting images to pyramid tiff is done in [process_images.py](img_src/process_images.py). This python3 script can be run separately outside of docker. However, if you want to run the script inside the container here's how...
 
 1. start Docker
 2. open a terminal window build and tag the Dockerfile image

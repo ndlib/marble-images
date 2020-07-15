@@ -2,7 +2,7 @@ FROM alpine:3.11.6
 
 RUN apk update && apk upgrade
 
-# basic packages libvips likes
+# basic packages libvips
 RUN apk add \
 	build-base \
 	autoconf \
@@ -47,10 +47,14 @@ RUN apk add \
 # install python dependencies
 RUN pip3 install --upgrade pip
 RUN pip3 install wheel --no-cache-dir
-COPY requirements.txt /usr/local/bin/
+COPY img_src/requirements.txt /usr/local/bin/
 RUN pip3 install -r /usr/local/bin/requirements.txt
 
-COPY process_images.py /usr/local/bin/
-COPY google_utilities.py /usr/local/bin/
+COPY img_src/aws_utility.py /usr/local/bin/
+COPY img_src/config.py /usr/local/bin/
+COPY img_src/embark.py /usr/local/bin/
+COPY img_src/google_utility.py /usr/local/bin/
+COPY img_src/process_images.py /usr/local/bin/
+COPY img_src/rbsc.py /usr/local/bin/
 RUN chmod u+x /usr/local/bin/process_images.py
 ENTRYPOINT ["process_images.py"]
