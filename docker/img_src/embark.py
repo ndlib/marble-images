@@ -64,7 +64,7 @@ def _preprocess_image(img_data: dict, local_file: str) -> Image:
         print(f"Original image height: {image.height}")
         print(f"Original image width: {image.width}")
         image = image.shrink(shrink_by, shrink_by)
-    return image
+    return image.copy(xres=config.DPI_VALUE, yres=config.DPI_VALUE)
 
 
 def process_embark_changes():
