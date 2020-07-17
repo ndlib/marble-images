@@ -32,7 +32,8 @@ def _reprocess_image(img_data: dict) -> None:
     aws_utility.download_file(config.RBSC_BUCKET, img_data["key"], local_file)
     image = _preprocess_image(local_file)
     image.tiffsave(tif_filename, tile=True, pyramid=True, compression=config.COMPRESSION_TYPE,
-        tile_width=config.PYTIF_TILE_WIDTH, tile_height=config.PYTIF_TILE_HEIGHT)  # noqa
+        tile_width=config.PYTIF_TILE_WIDTH, tile_height=config.PYTIF_TILE_HEIGHT, \
+        xres=config.DPI_VALUE, yres=config.DPI_VALUE)  # noqa
     os.remove(local_file)
     key = f"{img_data['id']}/{tif_filename}"
     aws_utility.upload_file(config.IMAGE_BUCKET, key, tif_filename)
@@ -51,7 +52,7 @@ def _preprocess_image(local_file: str) -> Image:
         print(f'Original image height: {image.height}')
         print(f'Original image width: {image.width}')
         image = image.shrink(shrink_by, shrink_by)
-    return image.copy(xres=config.DPI_VALUE, yres=config.DPI_VALUE)
+    return image
 
 
 def process_rbsc_changes():
