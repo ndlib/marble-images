@@ -61,8 +61,7 @@ Tests should be placed in test/unit
 To execute all test: `python run_all_tests.py`
 ### Dependencies
 #### Development Dependencies
-1. Review the src/dev-requirements.txt to install/update lambda development packages
-2. Review the docker/requirements.txt to install/update ECS development packages
+1. Review the src/dev-requirements.txt
 #### Production Dependencies
 1. Review the lambda/requirements.txt to install/update lambda development packages
 2. Review the ECS Dockerfile for python production packages
@@ -77,4 +76,4 @@ To execute all test: `python run_all_tests.py`
     1. deactivate
 
 ## Image processing with Docker and AWS ECS
-Here we aim to take images from various sources and generate [pyramid tiffs](https://iipimage.sourceforge.io/documentation/images/). To accomplish this we'll launch an EC2 instance(virtual machine), install our Dockerfile on it, pull down our image from its source, and generate the pyramid tiff using the [pyvips](https://pypi.org/project/pyvips/) library. Additional details found [here](docker/README.md).
+Here we aim to take images from various sources and generate [pyramid tiffs](https://iipimage.sourceforge.io/documentation/images/). To accomplish this we'll launch an EC2 instance(virtual machine), install our Dockerfile on it, pull down our image from its source, and generate the pyramid tiff using the [pyvips](https://pypi.org/project/pyvips/) library. Additional details found [here](DOCKER.md).

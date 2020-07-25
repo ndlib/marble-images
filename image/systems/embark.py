@@ -1,10 +1,10 @@
-import config
 import os
 import json
 from pyvips import Image
 import botocore
-import google_utility
-import aws_utility
+import shared.config as config
+import shared.aws_utility as aws_utility
+import shared.google_utility as google_utility
 
 
 # establish a one-time connection to Google Drive

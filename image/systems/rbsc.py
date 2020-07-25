@@ -1,8 +1,8 @@
-import config
 import os
 import json
 from pyvips import Image
-import aws_utility
+import image.shared.config as config
+import image.shared.aws_utility as aws_utility
 
 
 def _list_changes() -> dict:
@@ -33,7 +33,7 @@ def _reprocess_image(img_data: dict) -> None:
     image = _preprocess_image(local_file)
     image.tiffsave(tif_filename, tile=True, pyramid=True, compression=config.COMPRESSION_TYPE,
         tile_width=config.PYTIF_TILE_WIDTH, tile_height=config.PYTIF_TILE_HEIGHT, \
-        xres=config.DPI_VALUE, yres=config.DPI_VALUE)  # noqa
+        xres=config.DPI_VALUE, yres=config.DPI_VALUE) # noqa
     os.remove(local_file)
     key = f"{img_data['id']}/{tif_filename}"
     aws_utility.upload_file(config.IMAGE_BUCKET, key, tif_filename)
