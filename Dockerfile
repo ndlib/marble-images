@@ -31,7 +31,7 @@ RUN apk add \
 	librsvg-dev
 
 # install vips
-ARG VIPS_VERSION=8.8.3
+ARG VIPS_VERSION=8.9.2
 ARG VIPS_URL=https://github.com/libvips/libvips/releases/download
 
 RUN wget -O- ${VIPS_URL}/v${VIPS_VERSION}/vips-${VIPS_VERSION}.tar.gz | tar xzC /tmp
