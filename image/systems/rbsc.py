@@ -1,8 +1,8 @@
 import os
 import json
 from pyvips import Image
-import image.shared.config as config
-import image.shared.aws_utility as aws_utility
+import shared.config as config
+import shared.aws_utility as aws_utility
 
 
 def _list_changes() -> dict:
