@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
-from rbsc import process_rbsc_changes
-from embark import process_embark_changes
+from systems.rbsc import process_rbsc_changes
+from systems.embark import process_embark_changes
 
 
 if __name__ == "__main__":
