@@ -17,17 +17,22 @@ def _get_credentials_from_service_account_info(credentials):
 
 def establish_connection(credentials):
     """ Create a connection to the Google API """
-    timeout_in_sec = 180  # 3 minute timeout for build process
+    timeout_in_sec = 5  # timeout for build process
     socket.setdefaulttimeout(timeout_in_sec)
     credentials = _get_credentials_from_service_account_info(credentials)
     return build('drive', 'v3', credentials=credentials)
 
 
-def download_file(connection, file_id, local_file_name):
-    request = connection.files().get_media(fileId=file_id)
-    fh = io.FileIO(local_file_name, 'wb')
-    downloader = MediaIoBaseDownload(fh, request)
-    done = False
-    while done is False:
-        status, done = downloader.next_chunk()
-        # print("Download %d%%." % int(status.progress() * 100))
+def download_file(connection, file_id, local_file_name) -> bool:
+    downloaded = True
+    try:
+        request = connection.files().get_media(fileId=file_id)
+        fh = io.FileIO(local_file_name, 'wb')
+        downloader = MediaIoBaseDownload(fh, request)
+        done = False
+        while done is False:
+            status, done = downloader.next_chunk()
+    except socket.timeout as e:
+        print(f"Error downloading {local_file_name} - {e}")
+        downloaded = False
+    return downloaded
