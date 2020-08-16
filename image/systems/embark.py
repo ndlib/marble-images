@@ -1,15 +1,18 @@
 import os
 import json
+from queue import Queue
+import threading
 from pyvips import Image
 import botocore
 import shared.config as config
 import shared.aws_utility as aws_utility
 import shared.google_utility as google_utility
+import time
 
-
+counter = 0
 # establish a one-time connection to Google Drive
 gdrive_creds = aws_utility.get_gdrive_creds()
-gdrive_conn = google_utility.establish_connection(gdrive_creds)
+# gdrive_conn = google_utility.establish_connection(gdrive_creds)
 
 
 def _list_changes() -> dict:
@@ -33,19 +36,25 @@ def _list_changes() -> dict:
         return {}
 
 
-def _reprocess_image(img_data: dict) -> None:
-    tif_filename = f"{os.path.splitext(img_data['id'])[0]}.tif"
-    local_file = f"TEMP_{img_data['id']}"
-    google_utility.download_file(gdrive_conn, img_data["fileId"], local_file)
-    image = _preprocess_image(img_data, local_file)
-    image.tiffsave(tif_filename, tile=True, pyramid=True, compression=config.COMPRESSION_TYPE,
-        tile_width=config.PYTIF_TILE_WIDTH, tile_height=config.PYTIF_TILE_HEIGHT, \
-        xres=config.DPI_VALUE, yres=config.DPI_VALUE) # noqa
-    os.remove(local_file)
-    key = f"{img_data['collectionId']}/{tif_filename}"
-    aws_utility.upload_file(config.IMAGE_BUCKET, key, tif_filename)
-    os.remove(tif_filename)
-    # print(f"{image.get_fields()}")  # image fields, including exif
+def _reprocess_image(queue: Queue) -> None:
+    while not queue.empty():
+        img_data = queue.get()
+        tif_filename = f"{os.path.splitext(img_data['id'])[0]}.tif"
+        local_file = f"TEMP_{img_data['id']}"
+        conn = google_utility.establish_connection(gdrive_creds)
+        if google_utility.download_file(conn, img_data["fileId"], local_file):
+            global counter
+            counter += 1
+            image = _preprocess_image(img_data, local_file)
+            image.tiffsave(tif_filename, tile=True, pyramid=True, compression=config.COMPRESSION_TYPE,
+                tile_width=config.PYTIF_TILE_WIDTH, tile_height=config.PYTIF_TILE_HEIGHT, \
+                xres=config.DPI_VALUE, yres=config.DPI_VALUE) # noqa
+            os.remove(local_file)
+            key = f"{img_data['collectionId']}/{tif_filename}"
+            aws_utility.upload_file(config.IMAGE_BUCKET, key, tif_filename)
+            os.remove(tif_filename)
+        queue.task_done()
+        # print(f"{image.get_fields()}")  # image fields, including exif
 
 
 def _preprocess_image(img_data: dict, local_file: str) -> Image:
@@ -69,9 +78,19 @@ def _preprocess_image(img_data: dict, local_file: str) -> Image:
 
 
 def process_embark_changes():
+    jobs = Queue()
     for img_data in _list_changes():
-        print(img_data["fileId"])
-        _reprocess_image(img_data)
+        jobs.put(img_data)
+
+    start_time = time.time()
+    for i in range(config.MAX_THREADS):
+        threading.Thread(target=_reprocess_image, args=(jobs,)).start()
+
+    jobs.join()
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print(f"PROCESSED {counter} IMAGES")
+    print(f"ELAPSED TIME = {elapsed_time} seconds")
 
 
 if __name__ == "__main__":
