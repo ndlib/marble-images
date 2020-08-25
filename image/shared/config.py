@@ -1,7 +1,10 @@
 import os
 
 # MULTITHREADING
-MAX_THREADS = 6
+if 'MAX_THREADS' in os.environ:
+    MAX_THREADS = os.environ['MAX_THREADS']
+else:
+    MAX_THREADS = 6
 
 # IMAGE CONSTANTS
 DEFAULT_MAX_HEIGHT = 4000.0
