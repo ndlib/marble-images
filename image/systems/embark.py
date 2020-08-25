@@ -10,9 +10,7 @@ import shared.google_utility as google_utility
 import time
 
 counter = 0
-# establish a one-time connection to Google Drive
 gdrive_creds = aws_utility.get_gdrive_creds()
-# gdrive_conn = google_utility.establish_connection(gdrive_creds)
 
 
 def _list_changes() -> dict:
