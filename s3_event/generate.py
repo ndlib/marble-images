@@ -7,8 +7,8 @@ from urllib.parse import unquote_plus
 def handler(event, context):
     key = unquote_plus(event["Records"][0]["s3"]["object"]["key"])
     etag = event["Records"][0]["s3"]["object"]["eTag"]
-    id = key.split("/")[-2]
-    data = {'key': key, 'eTag': etag, 'id': id}
+    path = key.rsplit('/', 1)[0] + "/"
+    data = {'key': key, 'eTag': etag, 'path': path}
     filename = os.path.basename(key)
     filename = os.path.splitext(filename)[0]
     os.chdir("/tmp")
