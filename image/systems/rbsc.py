@@ -45,7 +45,7 @@ def _reprocess_image(queue: Queue) -> None:
             tile_width=config.PYTIF_TILE_WIDTH, tile_height=config.PYTIF_TILE_HEIGHT, \
             xres=config.DPI_VALUE, yres=config.DPI_VALUE) # noqa
         os.remove(local_file)
-        key = f"{img_data['id']}/{tif_filename}"
+        key = f"{img_data['path']}{tif_filename}"
         aws_utility.upload_file(config.IMAGE_BUCKET, key, tif_filename)
         os.remove(tif_filename)
         global counter
