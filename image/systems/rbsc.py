@@ -2,7 +2,7 @@ import os
 import json
 from queue import Queue
 import threading
-from pyvips import Image
+from pyvips import Image, Error
 import shared.config as config
 import shared.aws_utility as aws_utility
 import time
@@ -41,13 +41,14 @@ def _reprocess_image(queue: Queue) -> None:
         local_file = f"TEMP_{os.path.basename(img_data['key'])}"
         aws_utility.download_file(config.RBSC_BUCKET, img_data["key"], local_file)
         image = _preprocess_image(local_file)
-        image.tiffsave(tif_filename, tile=True, pyramid=True, compression=config.COMPRESSION_TYPE,
-            tile_width=config.PYTIF_TILE_WIDTH, tile_height=config.PYTIF_TILE_HEIGHT, \
-            xres=config.DPI_VALUE, yres=config.DPI_VALUE) # noqa
-        os.remove(local_file)
-        key = f"{img_data['path']}{tif_filename}"
-        aws_utility.upload_file(config.IMAGE_BUCKET, key, tif_filename)
-        os.remove(tif_filename)
+        if image:
+            image.tiffsave(tif_filename, tile=True, pyramid=True, compression=config.COMPRESSION_TYPE,
+                tile_width=config.PYTIF_TILE_WIDTH, tile_height=config.PYTIF_TILE_HEIGHT, \
+                xres=config.DPI_VALUE, yres=config.DPI_VALUE) # noqa
+            os.remove(local_file)
+            key = f"{img_data['path']}{tif_filename}"
+            aws_utility.upload_file(config.IMAGE_BUCKET, key, tif_filename)
+            os.remove(tif_filename)
         global counter
         counter += 1
         queue.task_done()
@@ -55,16 +56,20 @@ def _reprocess_image(queue: Queue) -> None:
 
 
 def _preprocess_image(local_file: str) -> Image:
-    image = Image.new_from_file(local_file, access='sequential')
-    if image.height > config.DEFAULT_MAX_HEIGHT or image.width > config.DEFAULT_MAX_WIDTH:
-        if image.height >= image.width:
-            shrink_by = image.height / config.DEFAULT_MAX_HEIGHT
-        else:
-            shrink_by = image.width / config.DEFAULT_MAX_WIDTH
-        print(f'Resizing original image by: {shrink_by}')
-        print(f'Original image height: {image.height}')
-        print(f'Original image width: {image.width}')
-        image = image.shrink(shrink_by, shrink_by)
+    try:
+        image = Image.new_from_file(local_file, access='sequential')
+        if image.height > config.DEFAULT_MAX_HEIGHT or image.width > config.DEFAULT_MAX_WIDTH:
+            if image.height >= image.width:
+                shrink_by = image.height / config.DEFAULT_MAX_HEIGHT
+            else:
+                shrink_by = image.width / config.DEFAULT_MAX_WIDTH
+            print(f'Resizing original image by: {shrink_by}')
+            print(f'Original image height: {image.height}')
+            print(f'Original image width: {image.width}')
+            image = image.shrink(shrink_by, shrink_by)
+    except Error as e:
+        image = None
+        print(f"Encountered error on image - {local_file} - {e}")
     return image
 
 
