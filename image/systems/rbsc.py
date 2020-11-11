@@ -69,7 +69,7 @@ def _preprocess_image(local_file: str) -> Image:
             image = image.shrink(shrink_by, shrink_by)
     except Error as e:
         image = None
-        print(f"Encountered error on image - {local_file} - {e}")
+        print(f"Error on image - {local_file} - {e}")
     return image
 
 
