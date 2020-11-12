@@ -9,29 +9,6 @@ import time
 
 
 counter = 0
-skip = ['TEMP_BPP_1001-052.jpg',
-    'TEMP_BPP_1001-029-c3.jpg',
-    'TEMP_BPP_1001-087.jpg',
-    'TEMP_BPP_1001-090-c3.jpg',
-    'TEMP_BPP_1001-091-c2.jpg',
-    'TEMP_BPP_1001-117.jpg',
-    'TEMP_BPP_1001-137-c1.jpg',
-    'TEMP_BPP_1001-140.jpg',
-    'TEMP_BPP_1001-145-c1.jpg',
-    'TEMP_BPP_1001-150-c2.jpg',
-    'TEMP_BPP_1001-156.jpg',
-    'TEMP_BPP_1001-209-c2.jpg',
-    'TEMP_BPP_1001-212.jpg',
-    'TEMP_BPP_1001-223-c1.jpg',
-    'TEMP_BPP_1001-244-c2.jpg',
-    'TEMP_BPP_1001-269.jpg',
-    'TEMP_BPP_1001-227-c3.jpg',
-    'TEMP_BPP_1001-290.jpg',
-    'TEMP_BPP_1001-300.jpg',
-    'TEMP_BPP_1001-313-c2.jpg',
-    'TEMP_EPH_5007-05a.jpg',
-    'TEMP_EPH_5007-10b.jpg',
-    'TEMP_EPH_5007-34b.jpg']
 
 
 def _list_changes() -> list:
@@ -62,17 +39,16 @@ def _reprocess_image(queue: Queue) -> None:
         tif_filename = os.path.basename(img_data["key"])
         tif_filename = f"{os.path.splitext(tif_filename)[0]}.tif"
         local_file = f"TEMP_{os.path.basename(img_data['key'])}"
-        if local_file not in skip:
-            aws_utility.download_file(config.RBSC_BUCKET, img_data["key"], local_file)
-            image = _preprocess_image(local_file)
-            if image:
-                image.tiffsave(tif_filename, tile=True, pyramid=True, compression=config.COMPRESSION_TYPE,
-                    tile_width=config.PYTIF_TILE_WIDTH, tile_height=config.PYTIF_TILE_HEIGHT, \
-                    xres=config.DPI_VALUE, yres=config.DPI_VALUE) # noqa
-                os.remove(local_file)
-                key = f"{img_data['path']}{tif_filename}"
-                aws_utility.upload_file(config.IMAGE_BUCKET, key, tif_filename)
-                os.remove(tif_filename)
+        aws_utility.download_file(config.RBSC_BUCKET, img_data["key"], local_file)
+        image = _preprocess_image(local_file)
+        if image:
+            image.tiffsave(tif_filename, tile=True, pyramid=True, compression=config.COMPRESSION_TYPE,
+                tile_width=config.PYTIF_TILE_WIDTH, tile_height=config.PYTIF_TILE_HEIGHT, \
+                xres=config.DPI_VALUE, yres=config.DPI_VALUE) # noqa
+            key = f"{img_data['path']}{tif_filename}"
+            aws_utility.upload_file(config.IMAGE_BUCKET, key, tif_filename)
+            os.remove(tif_filename)
+            os.remove(local_file)
         global counter
         counter += 1
         queue.task_done()
@@ -91,9 +67,12 @@ def _preprocess_image(local_file: str) -> Image:
             print(f'Original image height: {image.height}')
             print(f'Original image width: {image.width}')
             image = image.shrink(shrink_by, shrink_by)
-    except Error as e:
+    except Error as pye:
         image = None
-        print(f"Error on image - {local_file} - {e}")
+        print(f"VIPs error - {pye.message}")
+    except Exception as e:
+        image = None
+        print(f"General exception - {e}")
     return image
 
 
