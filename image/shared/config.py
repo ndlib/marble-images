@@ -22,3 +22,5 @@ COMPRESSION_TYPE = 'deflate'
 RBSC_BUCKET = os.environ['RBSC_BUCKET']
 IMAGE_BUCKET = os.environ['IMAGE_BUCKET']
 PROCESS_BUCKET = os.environ['PROCESS_BUCKET']
+
+JSON_PROCESS_DIR = 'rbsc/'
