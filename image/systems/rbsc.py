@@ -48,9 +48,9 @@ def _reprocess_image(queue: Queue) -> None:
             key = f"{img_data['path']}{tif_filename}"
             aws_utility.upload_file(config.IMAGE_BUCKET, key, tif_filename)
             os.remove(tif_filename)
-            os.remove(local_file)
-            aws_utility.delete_file(config.PROCESS_BUCKET, f"{config.JSON_PROCESS_DIR}{os.path.splitext(tif_filename)[0]}.json")
-            print(f'Completed {local_file}')
+        os.remove(local_file)
+        aws_utility.delete_file(config.PROCESS_BUCKET, f"{config.JSON_PROCESS_DIR}{os.path.splitext(tif_filename)[0]}.json")
+        print(f'Completed {local_file}')
         global counter
         counter += 1
         queue.task_done()
