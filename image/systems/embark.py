@@ -37,8 +37,9 @@ def _list_changes() -> dict:
 def _reprocess_image(queue: Queue) -> None:
     while not queue.empty():
         img_data = queue.get()
-        tif_filename = f"{os.path.splitext(img_data['id'])[0]}.tif"
-        local_file = f"TEMP_{img_data['id']}"
+        path, filename = os.path.split(img_data['id'])
+        tif_filename = f"{os.path.splitext(filename)[0]}.tif"
+        local_file = f"TEMP_{filename}"
         conn = google_utility.establish_connection(gdrive_creds)
         if google_utility.download_file(conn, img_data["fileId"], local_file):
             global counter
@@ -48,7 +49,7 @@ def _reprocess_image(queue: Queue) -> None:
                 tile_width=config.PYTIF_TILE_WIDTH, tile_height=config.PYTIF_TILE_HEIGHT, \
                 xres=config.DPI_VALUE, yres=config.DPI_VALUE) # noqa
             os.remove(local_file)
-            key = f"{img_data['collectionId']}/{tif_filename}"
+            key = f"{path}/{tif_filename}"
             aws_utility.upload_file(config.IMAGE_BUCKET, key, tif_filename)
             os.remove(tif_filename)
         queue.task_done()
@@ -67,10 +68,9 @@ def _preprocess_image(img_data: dict, local_file: str) -> Image:
             shrink_by = image.height / max_height
         else:
             shrink_by = image.width / max_width
-        print(f"Image resizing - {img_data['id']}")
-        print(f"Resizing original image by: {shrink_by}")
-        print(f"Original image height: {image.height}")
-        print(f"Original image width: {image.width}")
+        print(f"Resizing {local_file} by: {shrink_by}")
+        print(f"Original {local_file} height: {image.height}")
+        print(f"Original {local_file} width: {image.width}")
         image = image.shrink(shrink_by, shrink_by)
     return image
 
