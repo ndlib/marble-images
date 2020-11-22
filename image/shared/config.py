@@ -24,3 +24,4 @@ IMAGE_BUCKET = os.environ['IMAGE_BUCKET']
 PROCESS_BUCKET = os.environ['PROCESS_BUCKET']
 
 JSON_PROCESS_DIR = 'rbsc/'
+EC2_PROCESS_DIR = '/process/rbsc'
