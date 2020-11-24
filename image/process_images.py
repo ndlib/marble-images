@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import os
+import shared.config as config
 from systems.rbsc import process_rbsc_changes
 from systems.embark import process_embark_changes
 
