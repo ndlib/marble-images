@@ -20,6 +20,7 @@ def _list_changes() -> list:
             return {}
         for obj in resp['Contents']:
             local_file = os.path.basename(obj["Key"])
+            print(f"Downloading {obj['Key']} to {local_file}")
             aws_utility.download_file(config.PROCESS_BUCKET, obj["Key"], local_file)
             with open(local_file) as json_file:
                 data.append(json.load(json_file))
@@ -77,6 +78,7 @@ def _preprocess_image(local_file: str) -> Image:
 
 def process_rbsc_changes():
     jobs = Queue()
+    print(f"STARTING IMAGE PROCESSING IN {os.getcwd()}")
     for img_data in _list_changes():
         jobs.put(img_data)
 
