@@ -1,7 +1,7 @@
 from . import config
 
 
-def log(msg):
+def info(msg):
     if config.LOG_INFO:
         print(msg)
 
