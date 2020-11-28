@@ -4,6 +4,7 @@ from google.oauth2 import service_account
 from googleapiclient.discovery import build
 import io
 import socket
+from . import logger
 
 
 def establish_connection(credentials):
@@ -24,6 +25,6 @@ def download_file(connection, file_id, local_file_name) -> bool:
         while done is False:
             status, done = downloader.next_chunk()
     except socket.timeout as e:
-        print(f"Error downloading {local_file_name} - {e}")
+        logger.error(f"Error downloading {local_file_name} - {e}")
         downloaded = False
     return downloaded
