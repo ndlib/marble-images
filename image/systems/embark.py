@@ -5,6 +5,7 @@ import threading
 from pyvips import Image
 import botocore
 import shared.config as config
+import shared.logger as logger
 import shared.aws_utility as aws_utility
 import shared.google_utility as google_utility
 import time
@@ -28,9 +29,9 @@ def _list_changes() -> dict:
         status = err.response["ResponseMetadata"]["HTTPStatusCode"]
         errcode = err.response["Error"]["Code"]
         if status == 404:
-            print(f"Remote file - {remote_file} not found. No work to do.")
+            logger.error(f"Remote file - {remote_file} not found. No work to do.")
         else:
-            print(f"Unexpected err - {status}:{errcode}")
+            logger.error(f"Unexpected err - {status}:{errcode}")
         return {}
 
 
@@ -68,10 +69,13 @@ def _preprocess_image(img_data: dict, local_file: str) -> Image:
             shrink_by = image.height / max_height
         else:
             shrink_by = image.width / max_width
-        print(f"Resizing {local_file} by: {shrink_by}")
-        print(f"Original {local_file} height: {image.height}")
-        print(f"Original {local_file} width: {image.width}")
+        logger.debug(f"Image resizing - {img_data['id']}")
+        logger.debug(f"Resizing {local_file} by: {shrink_by}")
+        logger.debug(f"Original {local_file} height: {image.height}")
+        logger.debug(f"Original {local_file} width: {image.width}")
         image = image.shrink(shrink_by, shrink_by)
+        logger.debug(f"Updated {local_file} height: {image.height}")
+        logger.debug(f"Updated {local_file} width: {image.width}")
     return image
 
 
@@ -87,8 +91,8 @@ def process_embark_changes():
     jobs.join()
     end_time = time.time()
     elapsed_time = end_time - start_time
-    print(f"PROCESSED {counter} IMAGES")
-    print(f"ELAPSED TIME = {elapsed_time} seconds")
+    logger.info(f"PROCESSED {counter} IMAGES")
+    logger.info(f"ELAPSED TIME = {elapsed_time} seconds")
 
 
 if __name__ == "__main__":

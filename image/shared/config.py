@@ -22,6 +22,13 @@ COMPRESSION_TYPE = 'deflate'
 RBSC_BUCKET = os.environ['RBSC_BUCKET']
 IMAGE_BUCKET = os.environ['IMAGE_BUCKET']
 PROCESS_BUCKET = os.environ['PROCESS_BUCKET']
-
 JSON_PROCESS_DIR = 'rbsc/'
-EC2_PROCESS_DIR = '/process/images'
+
+# EC2/LOCAL SETTINGS
+# local processing dir
+EC2_PROCESS_DIR = '/process/rbsc'
+
+# LOGGER SETTINGS
+LOG_DEBUG = False
+LOG_INFO = True
+LOG_ERROR = True
