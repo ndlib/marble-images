@@ -29,6 +29,6 @@ JSON_PROCESS_DIR = 'rbsc/'
 EC2_PROCESS_DIR = '/process/rbsc'
 
 # LOGGER SETTINGS
-LOG_DEBUG = False
+LOG_DEBUG = True
 LOG_INFO = True
 LOG_ERROR = True

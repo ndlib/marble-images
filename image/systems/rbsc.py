@@ -83,8 +83,10 @@ def _preprocess_image(local_file: str) -> Image:
 
 def process_rbsc_changes():
     jobs = Queue()
+    logger.info("GATHERING IMAGES TO PROCESS")
     for img_data in _list_changes():
         jobs.put(img_data)
+    logger.info(f"{jobs.qsize} IMAGES TO PROCESS")
 
     start_time = time.time()
     for i in range(config.MAX_THREADS):
