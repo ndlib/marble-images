@@ -3,6 +3,7 @@ import os
 from systems.rbsc import process_rbsc_changes
 from shared import config
 from systems.embark import process_embark_changes
+from systems.curate import process_curate_changes
 
 
 if __name__ == "__main__":
@@ -11,3 +12,4 @@ if __name__ == "__main__":
     os.chdir(config.EC2_PROCESS_DIR)
     process_rbsc_changes()
     process_embark_changes()
+    process_curate_changes()
