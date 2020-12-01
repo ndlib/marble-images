@@ -4,7 +4,7 @@ import os
 if 'MAX_THREADS' in os.environ:
     MAX_THREADS = os.environ['MAX_THREADS']
 else:
-    MAX_THREADS = 4
+    MAX_THREADS = 1
 
 # IMAGE CONSTANTS
 DEFAULT_MAX_HEIGHT = 4000.0
