@@ -76,7 +76,7 @@ def _preprocess_image(img_data: dict, local_file: str) -> Image:
                 shrink_by = image.height / max_height
             else:
                 shrink_by = image.width / max_width
-            logger.debug(f"Image resizing - {img_data['id']}")
+            logger.debug(f"Image resizing - {local_file}")
             logger.debug(f"Resizing {local_file} by: {shrink_by}")
             logger.debug(f"Original {local_file} height: {image.height}")
             logger.debug(f"Original {local_file} width: {image.width}")
