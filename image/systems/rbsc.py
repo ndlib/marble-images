@@ -34,20 +34,23 @@ def _reprocess_image(queue: Queue) -> None:
         img_data = _retrieve_file_data(img_data)
         tif_filename = os.path.basename(img_data["key"])
         tif_filename = f"{os.path.splitext(tif_filename)[0]}.tif"
-        local_file = f"TEMP_{os.path.basename(img_data['key'])}"
-        aws_utility.download_file(config.RBSC_BUCKET, img_data["key"], local_file)
-        logger.debug(f'Processing {local_file}')
-        image = _preprocess_image(img_data, local_file)
-        if image:
-            image.tiffsave(tif_filename, tile=True, pyramid=True, compression=config.COMPRESSION_TYPE,
-                tile_width=config.PYTIF_TILE_WIDTH, tile_height=config.PYTIF_TILE_HEIGHT, \
-                xres=config.DPI_VALUE, yres=config.DPI_VALUE) # noqa
-            key = f"{img_data['path']}{tif_filename}"
-            aws_utility.upload_file(config.IMAGE_BUCKET, key, tif_filename)
-            os.remove(tif_filename)
-        os.remove(local_file)
-        aws_utility.delete_file(config.PROCESS_BUCKET, f"{config.JSON_PROCESS_DIR}{os.path.splitext(tif_filename)[0]}.json")
-        logger.debug(f'Completed {local_file}')
+        if not tif_filename.startswith("MAN_"):
+            local_file = f"TEMP_{os.path.basename(img_data['key'])}"
+            aws_utility.download_file(config.RBSC_BUCKET, img_data["key"], local_file)
+            logger.debug(f'Processing {local_file}')
+            image = _preprocess_image(img_data, local_file)
+            if image:
+                image.tiffsave(tif_filename, tile=True, pyramid=True, compression=config.COMPRESSION_TYPE,
+                    tile_width=config.PYTIF_TILE_WIDTH, tile_height=config.PYTIF_TILE_HEIGHT, \
+                    xres=config.DPI_VALUE, yres=config.DPI_VALUE) # noqa
+                key = f"{img_data['path']}{tif_filename}"
+                aws_utility.upload_file(config.IMAGE_BUCKET, key, tif_filename)
+                os.remove(tif_filename)
+            os.remove(local_file)
+            aws_utility.delete_file(config.PROCESS_BUCKET, f"{config.JSON_PROCESS_DIR}{os.path.splitext(tif_filename)[0]}.json")
+            logger.debug(f'Completed {local_file}')
+        else:
+            print(f"Skipping {tif_filename}")
         global counter
         counter += 1
         queue.task_done()
