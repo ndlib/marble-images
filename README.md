@@ -76,4 +76,4 @@ To execute all test: `python run_all_tests.py`
     1. deactivate
 
 ## Image processing with Docker and AWS ECS
-Here we aim to take images from various sources and generate [pyramid tiffs](https://iipimage.sourceforge.io/documentation/images/). To accomplish this we'll launch an EC2 instance(virtual machine), install our Dockerfile on it, pull down our image from its source, and generate the pyramid tiff using the [pyvips](https://pypi.org/project/pyvips/) library. Additional details found [here](DOCKER.md).
+Here we aim to take images from various sources and generate [pyramid tiffs](https://iipimage.sourceforge.io/documentation/images/). To accomplish this we'll launch a Fargate instance running our [Dockerfile](Dockerfile),and generate the pyramid tiff using the [pyvips](https://pypi.org/project/pyvips/) library. Additional details found [here](DOCKER.md).
