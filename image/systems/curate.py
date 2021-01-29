@@ -37,7 +37,7 @@ def _list_changes() -> dict:
 def _reprocess_image(queue: Queue) -> None:
     while not queue.empty():
         img_data = queue.get()
-        filename = img_data['title']
+        path, filename = os.path.split(img_data['id'])
         tif_filename = f"{os.path.splitext(filename)[0]}.tif"
         local_file = f"TEMP_{filename}"
         logger.debug(f"filename - {filename}")
@@ -50,7 +50,7 @@ def _reprocess_image(queue: Queue) -> None:
             image.tiffsave(tif_filename, tile=True, pyramid=True, compression=config.COMPRESSION_TYPE,
                 tile_width=config.PYTIF_TILE_WIDTH, tile_height=config.PYTIF_TILE_HEIGHT, \
                 xres=config.DPI_VALUE, yres=config.DPI_VALUE) # noqa
-            key = f"{tif_filename}"
+            key = f"{path}/{tif_filename}"
             aws_utility.upload_file(config.IMAGE_BUCKET, key, tif_filename)
             os.remove(tif_filename)
         os.remove(local_file)
