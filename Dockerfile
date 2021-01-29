@@ -22,7 +22,8 @@ RUN apk add \
 	libpng-dev \
 	libwebp-dev \
 	orc-dev \
-	libgsf-dev
+	libgsf-dev \
+	poppler-glib
 
 # text rendering, PDF rendering, SVG rendering
 RUN apk add \
@@ -39,6 +40,11 @@ RUN cd /tmp/vips-${VIPS_VERSION} \
 	&& ./configure --prefix=/usr --disable-static --disable-debug \
 	&& make V=0 \
 	&& make install
+
+# install fonts for PDF processing
+RUN apk --no-cache add msttcorefonts-installer fontconfig && \
+    update-ms-fonts && \
+    fc-cache -f
 
 RUN apk add \
 	python3-dev \
