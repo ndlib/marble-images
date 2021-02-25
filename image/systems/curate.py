@@ -43,9 +43,12 @@ def _reprocess_image(queue: Queue) -> None:
         logger.debug(f"filename - {filename}")
         logger.debug(f"local - {local_file}")
         logger.debug(f"tif - {tif_filename}")
-        with open(local_file, 'wb') as image_file:
-            image_file.write(requests.get(img_data['filePath']).content)
-        image = _preprocess_image(img_data, local_file)
+        if img_data.get('sourceFilePath'):
+            with open(local_file, 'wb') as image_file:
+                image_file.write(requests.get(img_data['sourceFilePath']).content)
+            image = _preprocess_image(img_data, local_file)
+        else:
+            image = None
         if image:
             image.tiffsave(tif_filename, tile=True, pyramid=True, compression=config.COMPRESSION_TYPE,
                 tile_width=config.PYTIF_TILE_WIDTH, tile_height=config.PYTIF_TILE_HEIGHT, \
