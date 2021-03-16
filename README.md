@@ -8,7 +8,7 @@ This stack depends on the [marble network stack](https://github.com/ndlib/marble
 
 ## Details
 
-This system watches for files to be uploaded(typically via AWS Storage Gateway) to a bucket(puts/multipart uploads). Once uploaded a lambda will trigger and write pertinent image information into arn:aws:s3:::process_bucket/rbsc/. Here's an example:
+This system watches(puts/multipart uploads) for files to be uploaded(typically via AWS Storage Gateway) to a bucket. Once uploaded a lambda will trigger and write pertinent image information into arn:aws:s3:::process_bucket/rbsc/. Here's an example:
 
 ```json
 {
