@@ -1,6 +1,6 @@
 # Overview
 
-This system watches for image files to be uploaded(typically via AWS Storage Gateway) to an s3 bucket, notes the image data, retrieves the image, transforms it to a pyramid tiff, and uploads it to an s3 bucket.
+This system polls AWS AppSync for image files that have been changed, retrieves the image, transforms it to a pyramid tiff, and uploads it to an s3 bucket.
 
 ## Prerequisites
 
@@ -8,16 +8,7 @@ This stack depends on the [marble network stack](https://github.com/ndlib/marble
 
 ## Details
 
-This system watches(puts/multipart uploads) for files to be uploaded(typically via AWS Storage Gateway) to a bucket. Once uploaded a lambda will trigger and write pertinent image information into arn:aws:s3:::process_bucket/rbsc/. Here's an example:
-
-```json
-{
-    key: 'digital/isaac_gala/lantern.png',
-    path: 'digital/isaac_gala/'
-}
-```
-
-At a set interval(daily at 5:30am EDT) CloudWatch will start-up a ECS task to download all json files in rbsc in the process bucket, download corresponding image files within, generate pyramid tiffs, and upload those resulting files to the image bucket.
+At a set interval(daily at 5:30am EDT) CloudWatch will start-up a ECS task to query an AWS AppSync API endpoint for a list of changed files, download the image files, generate pyramid tiffs, and upload those resulting files to the image bucket.
 
 ## Development
 
@@ -32,19 +23,7 @@ Use venv - <https://docs.python.org/3/library/venv.html>
 
 venv is included in the Python standard library and requires no additional installation. Additional details in deployment.
 
-### Testing
-
-Use unittest - <https://docs.python.org/3/library/unittest.html>
-
-Tests should be placed in test/unit
-
-To execute all test: `python run_all_tests.py`
-
 ### Dependencies
-
-#### Development Dependencies
-
-1. Review the s3_event/dev-requirements.txt
 
 #### Production Dependencies
 
@@ -65,5 +44,5 @@ Here we aim to take images from various sources and generate [pyramid tiffs](htt
 
 ## Utilities
 
-1. [Rerun images](image/utilities/rerun_rbsc_images.py) - execute the below command which will mark these images as needing to be reprocessed (Modify the valid_dirs variable to really narrow down which files are reran). Once that's completed use the AWS console CloudWatch section to modify your scheduled task to run to actually do the reprocessing work.
-    1. ```python RBSC_BUCKET=my_source_bucket PROCESS_BUCKET=my_process_bucket rerun_rbsc_images.py```
+~~1. [Rerun images](image/utilities/rerun_rbsc_images.py) - execute the below command which will mark these images as needing to be reprocessed (Modify the valid_dirs variable to really narrow down which files are reran). Once that's completed use the AWS console CloudWatch section to modify your scheduled task to run to actually do the reprocessing work.
+    1. ```python RBSC_BUCKET=my_source_bucket PROCESS_BUCKET=my_process_bucket rerun_rbsc_images.py```~~
