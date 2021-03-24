@@ -1,5 +1,6 @@
 import json
 import boto3
+from . import config
 
 
 AWS_REGION = 'us-east-1'
@@ -27,5 +28,22 @@ def list_files(**kwargs: dict) -> dict:
 def get_gdrive_creds() -> dict:
     # AWS SSM key containing Google Drive credentials
     GDRIVE_CRED = "/all/marble/google/credentials"
-    gdrive_creds = SSM_CLIENT.get_parameter(Name=GDRIVE_CRED, WithDecryption=True)
-    return json.loads(gdrive_creds['Parameter']['Value'])
+    return get_multiple_ssm_values(GDRIVE_CRED)
+
+
+def get_graphql_api_key() -> dict:
+    return get_single_ssm_value(config.GRAPHQL_API_KEY_KEY_PATH)
+
+
+def get_graphql_api_url() -> dict:
+    return get_single_ssm_value(config.GRAPHQL_API_URL_KEY_PATH)
+
+
+def get_single_ssm_value(ssm_key: str) -> str:
+    value = SSM_CLIENT.get_parameter(Name=ssm_key, WithDecryption=True)
+    return value['Parameter']['Value']
+
+
+def get_multiple_ssm_values(ssm_key: str) -> dict:
+    values = SSM_CLIENT.get_parameter(Name=ssm_key, WithDecryption=True)
+    return json.loads(values['Parameter']['Value'])

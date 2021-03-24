@@ -19,14 +19,23 @@ COMPRESSION_TYPE = 'deflate'
 
 # BUCKET SETTINGS
 # Image sources and destination buckets
-RBSC_BUCKET = os.environ['RBSC_BUCKET']
 IMAGE_BUCKET = os.environ['IMAGE_BUCKET']
-PROCESS_BUCKET = os.environ['PROCESS_BUCKET']
 JSON_PROCESS_DIR = 'rbsc/'
+
+# GRAPHQL API SETTINGS
+GRAPHQL_API_URL_KEY_PATH = os.environ['GRAPHQL_API_URL_KEY_PATH']
+GRAPHQL_API_KEY_KEY_PATH = os.environ['GRAPHQL_API_KEY_KEY_PATH']
+# SOURCE SYSTEMS
+S3 = "S3"
+CURATE = "Curate"
+MUSEUM = "Museum"
+URI = "Uri"
+IMAGE_SOURCES = [S3, CURATE, MUSEUM, URI]
 
 # EC2/LOCAL SETTINGS
 # local processing dir
-EC2_PROCESS_DIR = '/process/rbsc'
+EC2_PROCESS_DIR = '/process/images'
+
 
 # LOGGER SETTINGS
 LOG_DEBUG = True
