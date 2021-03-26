@@ -1,5 +1,4 @@
 from . import graphql
-from . import config
 
 
 def _query_files_to_process(nextToken: str = None) -> dict:
@@ -42,14 +41,11 @@ def update_processed_date(item_id: str) -> None:
 
 
 def generate_image_lists():
-    image_sources = {key: list([]) for key in config.IMAGE_SOURCES}
     todos = _query_files_to_process()
-    for todo in todos['data']['listFilesToProcess']['items']:
-        image_sources.get(todo['sourceType']).append(todo)
+    img_data = todos['data']['listFilesToProcess']['items']
     nextToken = todos['data']['listFilesToProcess']['nextToken']
     while nextToken:
         todos = _query_files_to_process(nextToken)
-        for todo in todos['data']['listFilesToProcess']['items']:
-            image_sources.get(todo['sourceType']).append(todo)
+        img_data.extend(todos['data']['listFilesToProcess']['items'])
         nextToken = todos['data']['listFilesToProcess']['nextToken']
-    return image_sources
+    return img_data

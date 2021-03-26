@@ -1,29 +1,29 @@
-{
-    "Museum": [{
-        "id": "2003.012/2003_012-v0058.tif",
-        "sourceType": "Museum",
-        "sourceFilePath": None,
-        "sourceBucketName": None,
-        "filePath": "2003.012/2003_012-v0058.tif",
-        "copyrightStatus": "Copyright",
-        "sourceUri": "https://drive.google.com/a/nd.edu/file/d/1kYOOUI0y9yqHw8EZ8OBfPkROb2SXvIXt/view"
-    }],
-    "Curate": [{
-        "id": "qz20sq9094h/r207tm73k88/7w62f764p53/France-S-Remy-Arch-Triumph.tif",
-        "sourceType": "Curate",
-        "sourceFilePath": None,
-        "sourceBucketName": None,
-        "filePath": "qz20sq9094h/r207tm73k88/7w62f764p53/France-S-Remy-Arch-Triumph.tif",
-        "copyrightStatus": None,
-        "sourceUri": "https://curate.nd.edu/api/items/download/8623hx14h87"
-    }],
-    "Uri": [{
-        "id": "collections/ead_xml/images/BPP_1001/BPP_1001-160.tif",
-        "sourceType": "Uri",
-        "sourceFilePath": None,
-        "sourceBucketName": None,
-        "filePath": "collections/ead_xml/images/BPP_1001/BPP_1001-160.tif",
-        "copyrightStatus": None,
-        "sourceUri": "https://rarebooks.library.nd.edu/collections/ead_xml/images/BPP_1001/BPP_1001-160.jpg"
-    }]
-}
+[
+  {
+    "id": "collections/ead_xml/images/BPP_1001/BPP_1001-154-c1.tif",
+    "sourceType": "Uri",
+    "sourceFilePath": "",
+    "sourceBucketName": "",
+    "filePath": "collections/ead_xml/images/BPP_1001/BPP_1001-154-c1.tif",
+    "copyrightStatus": "",
+    "sourceUri": "https://rarebooks.library.nd.edu/collections/ead_xml/images/BPP_1001/BPP_1001-154-c1.jpg"
+  },
+  {
+    "id": "2018.006/2018_006-v0005.tif",
+    "sourceType": "Museum",
+    "sourceFilePath": "",
+    "sourceBucketName": "",
+    "filePath": "2018.006/2018_006-v0005.tif",
+    "copyrightStatus": "Public domain",
+    "sourceUri": "https://drive.google.com/a/nd.edu/file/d/16xEE_55tQE1c_rCMdwtz3WTVvN6uBtty/view"
+  },
+  {
+    "id": "zp38w953h0s/79407w6566m/1951-01-28_Commencement.pdf",
+    "sourceType": "Curate",
+    "sourceFilePath": "",
+    "sourceBucketName": "",
+    "filePath": "zp38w953h0s/79407w6566m/1951-01-28_Commencement.pdf",
+    "copyrightStatus": "Copyright",
+    "sourceUri": "https://curate.nd.edu/api/items/download/7d278s48g79"
+  }
+]
