@@ -18,8 +18,9 @@ gdrive_creds = aws_utility.get_gdrive_creds()
 def _reprocess_image(queue: Queue) -> None:
     while not queue.empty():
         img_data = queue.get()
+        img_data["filePath"] = f"{os.path.splitext(img_data['filePath'])[0]}.tif"
         tif_filename = os.path.basename(img_data["filePath"])
-        local_file = f"TEMP_{os.path.basename(img_data['filePath'])}"
+        local_file = f"TEMP_{os.path.basename(img_data['id'])}"
         logger.info(f"Processing {img_data['id']}")
         _download_source_file(img_data, local_file)
         image = _preprocess_image(img_data, local_file)
@@ -27,7 +28,7 @@ def _reprocess_image(queue: Queue) -> None:
             image.tiffsave(tif_filename, tile=True, pyramid=True, compression=config.COMPRESSION_TYPE,
                 tile_width=config.PYTIF_TILE_WIDTH, tile_height=config.PYTIF_TILE_HEIGHT, \
                 xres=config.DPI_VALUE, yres=config.DPI_VALUE) # noqa
-            aws_utility.upload_file(config.IMAGE_BUCKET, img_data["filePath"], tif_filename)
+            _upload_files(img_data, local_file, tif_filename)
             gql.update_processed_date(img_data['id'])
             os.remove(tif_filename)
         os.remove(local_file)
@@ -71,6 +72,13 @@ def _download_source_file(img_data, local_file):
     else:
         conn = google_utility.establish_connection(gdrive_creds)
         google_utility.download_file(conn, img_data["sourceUri"][41:-5], local_file)
+
+
+def _upload_files(img_data, local_file, tif_filename):
+    if local_file.endswith(".pdf"):
+        key = img_data["filePath"].replace(".tif", ".pdf")
+        aws_utility.upload_file(config.IMAGE_BUCKET, key, local_file)
+    aws_utility.upload_file(config.IMAGE_BUCKET, img_data["filePath"], tif_filename)
 
 
 def process_image_changes(data: list):
