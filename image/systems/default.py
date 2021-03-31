@@ -65,7 +65,14 @@ def _download_source_file(img_data, local_file):
     if img_data["sourceType"] == config.S3:
         s3_info = f"s3://{img_data['sourceBucketName']}/"
         src_img = img_data["sourceFilePath"].replace(s3_info, '')
-        aws_utility.download_file(img_data["sourceBucketName"], src_img, local_file)
+        try:
+            aws_utility.download_file(img_data["sourceBucketName"], src_img, local_file)
+        except Exception as e:
+            print(f"local_file = '{local_file}'")
+            print(f"img_data = '{img_data}'")
+            print(f"src bucket = '{img_data['sourceFilePath']}'")
+            print(f"src_img = '{src_img}'")
+            print(e)
     elif img_data["sourceType"] in [config.URI, config.CURATE]:
         with open(local_file, 'wb') as image_file:
             image_file.write(requests.get(img_data['sourceUri']).content)
