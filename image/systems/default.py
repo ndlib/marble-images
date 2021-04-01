@@ -70,7 +70,7 @@ def _download_source_file(img_data, local_file):
         except Exception as e:
             print(f"local_file = '{local_file}'")
             print(f"img_data = '{img_data}'")
-            print(f"src bucket = '{img_data['sourceFilePath']}'")
+            print(f"src bucket = '{img_data['sourceBucketName']}'")
             print(f"src_img = '{src_img}'")
             print(e)
     elif img_data["sourceType"] in [config.URI, config.CURATE]:
