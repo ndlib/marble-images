@@ -6,35 +6,38 @@ import shared.config as config
 import shared.logger as logger
 import shared.graphql_utility as gql
 import shared.aws_utility as aws_utility
+import shared.uri_utility as uri_utility
 import shared.google_utility as google_utility
 import time
-import requests
 
 
-counter = 0
+stats = {'total': 0, 'error': {}}
+stats['error'] = {key: list([]) for key in config.IMAGE_SOURCES}
 gdrive_creds = aws_utility.get_gdrive_creds()
 
 
 def _reprocess_image(queue: Queue) -> None:
+    global stats
     while not queue.empty():
         img_data = queue.get()
         img_data["filePath"] = f"{os.path.splitext(img_data['filePath'])[0]}.tif"
         tif_filename = os.path.basename(img_data["filePath"])
         local_file = f"TEMP_{os.path.basename(img_data['id'])}"
         logger.info(f"Processing {img_data['id']}")
-        _download_source_file(img_data, local_file)
-        image = _preprocess_image(img_data, local_file)
-        if image:
-            image.tiffsave(tif_filename, tile=True, pyramid=True, compression=config.COMPRESSION_TYPE,
-                tile_width=config.PYTIF_TILE_WIDTH, tile_height=config.PYTIF_TILE_HEIGHT, \
-                xres=config.DPI_VALUE, yres=config.DPI_VALUE) # noqa
-            _upload_files(img_data, local_file, tif_filename)
-            gql.update_processed_date(img_data['id'])
-            os.remove(tif_filename)
-        os.remove(local_file)
-        logger.debug(f'Completed {local_file}')
-        global counter
-        counter += 1
+        if _download_source_file(img_data, local_file):
+            image = _preprocess_image(img_data, local_file)
+            if image:
+                image.tiffsave(tif_filename, tile=True, pyramid=True, compression=config.COMPRESSION_TYPE,
+                    tile_width=config.PYTIF_TILE_WIDTH, tile_height=config.PYTIF_TILE_HEIGHT, \
+                    xres=config.DPI_VALUE, yres=config.DPI_VALUE) # noqa
+                _upload_files(img_data, local_file, tif_filename)
+                gql.update_processed_date(img_data['id'])
+                os.remove(tif_filename)
+            os.remove(local_file)
+            logger.info(f'Completed {local_file}')
+        else:
+            stats["error"].get(img_data["sourceType"]).append(img_data["id"])
+        stats["total"] = stats.get("total") + 1
         queue.task_done()
     # print(f"{image.get_fields()}")  # image fields, including exif
 
@@ -61,24 +64,14 @@ def _preprocess_image(img_data: dict, local_file: str) -> Image:
     return image
 
 
-def _download_source_file(img_data, local_file):
+def _download_source_file(img_data, local_file) -> bool:
     if img_data["sourceType"] == config.S3:
-        s3_info = f"s3://{img_data['sourceBucketName']}/"
-        src_img = img_data["sourceFilePath"].replace(s3_info, '')
-        try:
-            aws_utility.download_file(img_data["sourceBucketName"], src_img, local_file)
-        except Exception as e:
-            print(f"local_file = '{local_file}'")
-            print(f"img_data = '{img_data}'")
-            print(f"src bucket = '{img_data['sourceBucketName']}'")
-            print(f"src_img = '{src_img}'")
-            print(e)
+        return aws_utility.download_file(img_data["sourceBucketName"], img_data["sourceFilePath"], local_file)
     elif img_data["sourceType"] in [config.URI, config.CURATE]:
-        with open(local_file, 'wb') as image_file:
-            image_file.write(requests.get(img_data['sourceUri']).content)
+        return uri_utility.download_file(local_file, img_data['sourceUri'])
     else:
         conn = google_utility.establish_connection(gdrive_creds)
-        google_utility.download_file(conn, img_data["sourceUri"][41:-5], local_file)
+        return google_utility.download_file(conn, img_data["sourceUri"][41:-5], local_file)
 
 
 def _upload_files(img_data, local_file, tif_filename):
@@ -101,5 +94,7 @@ def process_image_changes(data: list):
     jobs.join()
     end_time = time.time()
     elapsed_time = end_time - start_time
-    logger.info(f"PROCESSED {counter} IMAGES")
+    logger.info(f"{stats.get('total')} IMAGES ATTEMPTED")
+    for k, v in stats.get("error").items():
+        print(f"{len(v)} {k} ERRORS - {v}")
     logger.info(f"ELAPSED TIME = {elapsed_time} seconds")
