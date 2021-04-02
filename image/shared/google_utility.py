@@ -2,6 +2,7 @@
 from googleapiclient.http import MediaIoBaseDownload
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
+from googleapiclient.errors import Error
 import io
 import socket
 from . import logger
@@ -16,15 +17,18 @@ def establish_connection(credentials):
 
 
 def download_file(connection, file_id, local_file_name) -> bool:
+    downloaded = True
     try:
-        downloaded = True
         request = connection.files().get_media(fileId=file_id)
         fh = io.FileIO(local_file_name, 'wb')
         downloader = MediaIoBaseDownload(fh, request)
         done = False
         while done is False:
             status, done = downloader.next_chunk()
+    except Error as e:
+        logger.error(f"Error downloading {file_id} to {local_file_name} - {e}")
+        downloaded = False
     except socket.timeout as e:
-        logger.error(f"Error downloading {local_file_name} - {e}")
+        logger.error(f"Error downloading {file_id} to {local_file_name} - {e}")
         downloaded = False
     return downloaded

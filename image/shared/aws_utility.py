@@ -1,6 +1,8 @@
 import json
 import boto3
+from botocore.exceptions import ClientError
 from . import config
+from . import logger
 
 
 AWS_REGION = 'us-east-1'
@@ -9,8 +11,14 @@ S3_RESOURCE = boto3.resource('s3')
 SSM_CLIENT = boto3.client('ssm', region_name=AWS_REGION)
 
 
-def download_file(bucket: str, remote_file: str, local_file: str) -> None:
-    S3_RESOURCE.Bucket(bucket).download_file(remote_file, local_file)
+def download_file(bucket: str, remote_file: str, local_file: str) -> bool:
+    downloaded = True
+    try:
+        S3_RESOURCE.Bucket(bucket).download_file(remote_file, local_file)
+    except ClientError as ce:
+        logger.error(f"Error retrieving {remote_file} - {ce}")
+        downloaded = False
+    return downloaded
 
 
 def upload_file(bucket: str, remote_file: str, local_file: str) -> None:

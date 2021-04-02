@@ -30,6 +30,7 @@ S3 = "S3"
 CURATE = "Curate"
 MUSEUM = "Museum"
 URI = "Uri"
+IMAGE_SOURCES = [S3, CURATE, MUSEUM, URI]
 
 # EC2/LOCAL SETTINGS
 # local processing dir
