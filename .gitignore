@@ -6,6 +6,7 @@ node_modules
 deploy
 __pycache__/
 .DS_Store
+.vscode
 
 # CDK asset staging directory
 .cdk.staging
