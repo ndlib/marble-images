@@ -1,7 +1,8 @@
-from urllib import request
+from urllib import request, error
 from datetime import datetime
 import json
 from . import aws_utility
+from . import logger
 
 
 graphql_api_key = aws_utility.get_graphql_api_key()
@@ -36,5 +37,9 @@ def run_operation(query, operation_name, variables={}):
         method="POST",
         data=data.encode("utf8")
     )
-    response = request.urlopen(r).read()
-    return json.loads(response.decode("utf8"))
+    try:
+        response = request.urlopen(r).read()
+        return json.loads(response.decode("utf8"))
+    except error.URLError as ue:
+        logger.error(f"Error to {_request_url()} with {variables}: {ue}")
+        return {}
