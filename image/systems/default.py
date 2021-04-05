@@ -1,5 +1,6 @@
 import os
 from queue import Queue
+import time
 import threading
 from pyvips import Image, Error
 import shared.config as config
@@ -8,11 +9,9 @@ import shared.graphql_utility as gql
 import shared.aws_utility as aws_utility
 import shared.uri_utility as uri_utility
 import shared.google_utility as google_utility
-import time
+from shared.statistic import Statistic
 
 
-stats = {'total': 0, 'error': {}}
-stats['error'] = {key: list([]) for key in config.IMAGE_SOURCES}
 gdrive_creds = aws_utility.get_gdrive_creds()
 
 
@@ -36,8 +35,8 @@ def _reprocess_image(queue: Queue) -> None:
             os.remove(local_file)
             logger.info(f'Completed {local_file}')
         else:
-            stats["error"].get(img_data["sourceType"]).append(img_data["id"])
-        stats["total"] = stats.get("total") + 1
+            Statistic.download_err(img_data)
+        Statistic.attempted()
         queue.task_done()
     # print(f"{image.get_fields()}")  # image fields, including exif
 
@@ -60,6 +59,7 @@ def _preprocess_image(img_data: dict, local_file: str) -> Image:
             image = image.shrink(shrink_by, shrink_by)
     except Error as pye:
         image = None
+        Statistic.vips_err(img_data)
         logger.error(f"VIPs error - {pye.message}")
     return image
 
@@ -94,7 +94,5 @@ def process_image_changes(data: list):
     jobs.join()
     end_time = time.time()
     elapsed_time = end_time - start_time
-    logger.info(f"{stats.get('total')} IMAGES ATTEMPTED")
-    for k, v in stats.get("error").items():
-        print(f"{len(v)} {k} ERRORS - {v}")
+    Statistic.summary()
     logger.info(f"ELAPSED TIME = {elapsed_time} seconds")
