@@ -43,6 +43,3 @@ venv is included in the Python standard library and requires no additional insta
 Here we aim to take images from various sources and generate [pyramid tiffs](https://iipimage.sourceforge.io/documentation/images/). To accomplish this we'll launch an ECS Fargate instance running our [Dockerfile](Dockerfile),and generate the pyramid tiff using the [pyvips](https://pypi.org/project/pyvips/) library. Additional details found [here](DOCKER.md).
 
 ## Utilities
-
-~~1. [Rerun images](image/utilities/rerun_rbsc_images.py) - execute the below command which will mark these images as needing to be reprocessed (Modify the valid_dirs variable to really narrow down which files are reran). Once that's completed use the AWS console CloudWatch section to modify your scheduled task to run to actually do the reprocessing work.
-    1. ```python RBSC_BUCKET=my_source_bucket PROCESS_BUCKET=my_process_bucket rerun_rbsc_images.py```~~
