@@ -1,4 +1,5 @@
 from urllib import request, error
+from socket import timeout
 from datetime import datetime
 import json
 from . import aws_utility
@@ -38,8 +39,11 @@ def run_operation(query, operation_name, variables={}):
         data=data.encode("utf8")
     )
     try:
-        response = request.urlopen(r).read()
+        response = request.urlopen(r, timeout=5).read()
         return json.loads(response.decode("utf8"))
     except error.URLError as ue:
         logger.error(f"Error to {_request_url()} with {variables}: {ue}")
+        return {}
+    except timeout:
+        logger.error(f"Socket timed out to {_request_url()} with params: {data}")
         return {}
