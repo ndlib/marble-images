@@ -43,3 +43,13 @@ venv is included in the Python standard library and requires no additional insta
 Here we aim to take images from various sources and generate [pyramid tiffs](https://iipimage.sourceforge.io/documentation/images/). To accomplish this we'll launch an ECS Fargate instance running our [Dockerfile](Dockerfile),and generate the pyramid tiff using the [pyvips](https://pypi.org/project/pyvips/) library. Additional details found [here](DOCKER.md).
 
 ## Utilities
+
+### Modify scheduled event time
+
+The image processor fires off a Fargate task via a Cloudwatch scheduled job. The time that job is ran can be changed by assuming a role with proper privileges (WSE DataAdminRole) and running this AWS CLI command:
+
+```shell
+
+aws events put-rule --name "<marble-image-ScheduleRuleId>" --schedule-expression "cron(30 11 * * ? *)"
+
+```
