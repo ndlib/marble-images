@@ -16,7 +16,7 @@ def download_file(bucket: str, remote_file: str, local_file: str) -> bool:
     try:
         S3_RESOURCE.Bucket(bucket).download_file(remote_file, local_file)
     except ClientError as ce:
-        logger.error(f"Error retrieving {remote_file} - {ce}")
+        logger.error(f"Error retrieving {remote_file} - {ce} from {bucket}")
         downloaded = False
     return downloaded
 

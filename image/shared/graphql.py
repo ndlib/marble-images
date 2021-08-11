@@ -4,6 +4,7 @@ from datetime import datetime
 import json
 from . import aws_utility
 from . import logger
+from . import config
 
 
 graphql_api_key = aws_utility.get_graphql_api_key()
@@ -39,7 +40,7 @@ def run_operation(query, operation_name, variables={}):
         data=data.encode("utf8")
     )
     try:
-        response = request.urlopen(r, timeout=5).read()
+        response = request.urlopen(r, timeout=config.SOCKET_TIMEOUT).read()
         return json.loads(response.decode("utf8"))
     except error.URLError as ue:
         logger.error(f"Error to {_request_url()} with {variables}: {ue}")

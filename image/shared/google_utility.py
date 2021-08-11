@@ -6,11 +6,12 @@ from googleapiclient.errors import Error
 import io
 import socket
 from . import logger
+from . import config
 
 
 def establish_connection(credentials):
     """ Create a connection to the Google API """
-    socket.setdefaulttimeout(5)  # timeout in seconds for build process
+    socket.setdefaulttimeout(config.SOCKET_TIMEOUT)
     scopes = ['https://www.googleapis.com/auth/drive']
     google_creds = service_account.Credentials.from_service_account_info(credentials, scopes=scopes)
     return build('drive', 'v3', credentials=google_creds)
