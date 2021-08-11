@@ -20,11 +20,11 @@ COMPRESSION_TYPE = 'deflate'
 # BUCKET SETTINGS
 # Image sources and destination buckets
 IMAGE_BUCKET = os.environ['IMAGE_BUCKET']
-JSON_PROCESS_DIR = 'rbsc/'
 
 # GRAPHQL API SETTINGS
 GRAPHQL_API_URL_KEY_PATH = os.environ['GRAPHQL_API_URL_KEY_PATH']
 GRAPHQL_API_KEY_KEY_PATH = os.environ['GRAPHQL_API_KEY_KEY_PATH']
+
 # SOURCE SYSTEMS
 S3 = "S3"
 CURATE = "Curate"
@@ -40,3 +40,5 @@ EC2_PROCESS_DIR = '/process/images'
 LOG_DEBUG = True
 LOG_INFO = True
 LOG_ERROR = True
+
+SOCKET_TIMEOUT = 20
