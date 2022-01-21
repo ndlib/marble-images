@@ -29,8 +29,9 @@ def _reprocess_image(queue: Queue) -> None:
                 image.tiffsave(tif_filename, tile=True, pyramid=True, compression=config.COMPRESSION_TYPE,
                     tile_width=config.PYTIF_TILE_WIDTH, tile_height=config.PYTIF_TILE_HEIGHT, \
                     xres=config.DPI_VALUE, yres=config.DPI_VALUE) # noqa
+                new_tiff = Image.tiffload(tif_filename)
                 _upload_files(img_data, local_file, tif_filename)
-                gql.update_processed_date(img_data['id'])
+                gql.update_item(img_data['id'], new_tiff.height, new_tiff.width)
                 os.remove(tif_filename)
             os.remove(local_file)
             logger.info(f'Completed {local_file}')

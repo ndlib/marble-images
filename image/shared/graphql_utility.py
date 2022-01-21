@@ -22,22 +22,23 @@ def _query_files_to_process(nextToken: str = None) -> dict:
     return graphql.run_operation(operation, operation_name, variables)
 
 
-def _mutate_item_mod_date(item_id: str) -> dict:
+def _mutate_item(item_id: str, height: int, width: int) -> dict:
+    """ updates items last modified date, height, and width """
     operation = """
-        mutation saveFileLastProcessedDate($input: String!) {
-            saveFileLastProcessedDate(itemId: $input) {
+        mutation saveFileLastProcessedDate($id: String!, $height: Int, $width: Int) {
+            saveFileLastProcessedDate(itemId: $id,  height: $height, width: $width) {
                 id
                 modifiedDate
                 dateLastProcessed
             }
         }"""
     operation_name = "saveFileLastProcessedDate"
-    variables = {"input": item_id}
+    variables = {"id": item_id, "height": height, "width": width}
     return graphql.run_operation(operation, operation_name, variables)
 
 
-def update_processed_date(item_id: str) -> None:
-    return _mutate_item_mod_date(item_id)
+def update_item(item_id: str, height: int, width: int) -> None:
+    return _mutate_item(item_id, height, width)
 
 
 def generate_image_lists():
