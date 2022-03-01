@@ -37,8 +37,25 @@ def _mutate_item(item_id: str, height: int, width: int) -> dict:
     return graphql.run_operation(operation, operation_name, variables)
 
 
+def _remove_item(item_id: str) -> dict:
+    """ removes an item based on item_id """
+    operation = """
+        mutation removeItemToProcess($itemId: String!) {
+            removeItemToProcess(itemId: $itemId) {
+                recordsDeleted
+            }
+        }"""
+    operation_name = "removeItemToProcess"
+    variables = {"itemId": item_id}
+    return graphql.run_operation(operation, operation_name, variables)
+
+
 def update_item(item_id: str, height: int, width: int) -> None:
     return _mutate_item(item_id, height, width)
+
+
+def remove_missing_item(item_id: str) -> None:
+    return _remove_item(item_id)
 
 
 def generate_image_lists():
