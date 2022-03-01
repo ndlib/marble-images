@@ -36,6 +36,7 @@ def _reprocess_image(queue: Queue) -> None:
             os.remove(local_file)
             logger.info(f'Completed {local_file}')
         else:
+            gql.remove_missing_item(img_data['id'])
             Statistic.download_err(img_data)
         Statistic.attempted()
         queue.task_done()
