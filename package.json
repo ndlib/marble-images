@@ -6,7 +6,6 @@
   "author": "Ryan Doughty<rdought1@nd.edu>",
   "license": "MIT",
   "devDependencies": {
-    "@hesburgh-wse/hesburgh_utilities": "^1.0.7",
     "@sentry/cli": "^1.52.3",
     "aws-sdk": "^2.272.1",
     "babel-eslint": "^10.0.3",

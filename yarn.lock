@@ -105,13 +105,6 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@hesburgh-wse/hesburgh_utilities@^1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@hesburgh-wse/hesburgh_utilities/-/hesburgh_utilities-1.0.7.tgz#e37193c0322e0884ca98c77e683d5eeddce1285b"
-  integrity sha512-hVbTKby7dGxQ9R1ykwsxLn3XLAQp8ERtGj5mmc0Updq4L/qbKG+RUtTyRqEuGAKxIH0vlbw9FBTgA/MB0VLNWQ==
-  dependencies:
-    async "^2.5.0"
-
 "@sentry/cli@^1.52.3":
   version "1.52.3"
   resolved "https://registry.yarnpkg.com/@sentry/cli/-/cli-1.52.3.tgz#270ed167c7dae2f85eb4622ad3a4ec12ab67e6d2"
@@ -361,13 +354,6 @@ async@^2.1.4:
   integrity sha512-fNEiL2+AZt6AlAw/29Cr0UDe4sRAHCpEHh54WMz+Bb7QfNcFw4h3loofyJpLeQs4Yx7yuqu/2dLgM5hKOs6HlQ==
   dependencies:
     lodash "^4.17.10"
-
-async@^2.5.0:
-  version "2.6.3"
-  resolved "https://registry.yarnpkg.com/async/-/async-2.6.3.tgz#d72625e2344a3656e3a3ad4fa749fa83299d82ff"
-  integrity sha512-zflvls11DCy+dQWzTW2dzuilv8Z5X/pjfmZOWba6TNIVDm+2UDaJmXSOXlasHKfNBs8oo3M0aT50fDEWfKZjXg==
-  dependencies:
-    lodash "^4.17.14"
 
 asynckit@^0.4.0:
   version "0.4.0"
