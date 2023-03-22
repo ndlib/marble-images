@@ -7,7 +7,6 @@
   "license": "MIT",
   "devDependencies": {
     "@sentry/cli": "^1.52.3",
-    "aws-sdk": "^2.272.1",
     "babel-eslint": "^10.0.3",
     "dotenv": "^8.2.0",
     "eslint": "^6.6.0",
