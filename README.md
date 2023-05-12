@@ -1,3 +1,5 @@
+# MARBLE-related
+# Archived 2023-05-12 sm
 # Overview
 
 This system polls AWS AppSync for image files that have been changed, retrieves the image, transforms it to a pyramid tiff, and uploads it to an s3 bucket.
